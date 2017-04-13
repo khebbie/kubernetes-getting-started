@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: drone-server
+  namespace: droneci
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: drone-server
+    spec:
+      containers:
+      - env:
+        - name: DRONE_OPEN
+          value: "true"
+        - name: DRONE_GITHUB
+          value: "true"
+        - name: DRONE_GITHUB_CLIENT
+          value: NOT_GONNA_TELL_YOU
+        - name: DRONE_GITHUB_SECRET
+          value: NOT_GONNA_TELL_YOU
+        - name: DRONE_SECRET
+          value: my_secret
+        # Enables Docker in Docker
+        
+        image: drone/drone:0.5
+        name: drone-server
+        ports:
+        - containerPort: 8000
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/drone/
+          name: drone-server-claim
+        - mountPath: /var/run/docker.sock
+          name: docker-socket
+        - mountPath: /var/lib/docker
+          name: docker-lib
+      restartPolicy: Always
+      volumes:
+        - name: drone-server-claim
+          persistentVolumeClaim:
+            claimName: drone-server-claim11
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock
+        - name: docker-lib
+          hostPath:
+            path: /var/lib/docker
+
+status: {}

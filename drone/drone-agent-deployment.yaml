@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  namespace: droneci
+  name: drone-agent
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: drone-agent
+    spec:
+      containers:
+      - args:
+        - agent
+        env:
+        - name: DRONE_SERVER
+          value: ws://drone-server:8000/ws/broker
+        - name: DRONE_SECRET
+          value: my_secret
+        image: drone/drone:0.5
+        name: drone-agent
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: docker-socket
+ 
+      restartPolicy: Always
+      volumes:
+      - name: docker-socket
+        hostPath:
+            path: /var/run/docker.sock
+ 
+status: {}
