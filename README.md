@@ -3,9 +3,11 @@ Originaly from burrsutter/kube4docker.git
 
 Kubernetes Demo
 
-Notes:
-https://docs.google.com/document/d/1AMRL2OWmxC2j8vja3xe2VTUvcRtK6UQ01QGOE3t34O8/edit?usp=sharing
-
-Slides:
-https://docs.google.com/presentation/d/1A1_3BqWnDu6gFi7JYuCpMeYVzShnPrQZmGiamKcBz84/edit?usp=sharing
-
+# setup kubernetes cluster on aws using kops
+`export KOPS_STATE_STORE=s3://kube-example-dk-state-store   
+export NAME=dev.aws.example.dk 
+kops create cluster \   
+--zones us-west-2a \   
+${NAME}
+kops validate cluster
+`
